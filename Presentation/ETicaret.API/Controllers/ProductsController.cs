@@ -1,6 +1,8 @@
 ﻿using ETicaret.Application.Abstractions;
+using ETicaret.Application.Repositories.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicaret.API.Controllers
 {
@@ -8,18 +10,20 @@ namespace ETicaret.API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IProductReadRepository _productReadRepository;
+        private readonly IProductWriteRepository _productWriteRepository;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
         {
-            _productService = productService;
+            _productReadRepository = productReadRepository;
+            _productWriteRepository = productWriteRepository;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var products= _productService.GetProducts();
+            var products = await _productReadRepository.GetAll().ToListAsync();
             return Ok(products);
         }
-    }
+    } 
 }
