@@ -12,7 +12,7 @@ export class LayoutComponent implements OnInit {
   
   
   ngOnInit(): void {
-    //this.alertify.message("Merhaba",MessageType.Notify,Position.BottomRight,5)
+    
   }
 
 }
