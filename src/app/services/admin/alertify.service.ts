@@ -6,17 +6,25 @@ declare var alertify:any;
 })
 export class AlertifyService {
   constructor() { }
- message(message:string,messageType:MessageType,position: Position,delay:number=3,dismissOther:boolean = false){
-    alertify.set('notifier','position',position);
-    alertify.set('notifier', 'delay', delay);
-    const msj=alertify[messageType](message);
-    if(dismissOther)
+ //message(message:string,messageType:MessageType,position: Position,delay:number=3,dismissOther:boolean = false){
+ message(message:string,options:Partial<AlertifyOptions>){
+    alertify.set('notifier','position',options.position);
+    alertify.set('notifier', 'delay',options.delay);
+    const msj=alertify[options.messageType](message);
+    if(options.dismissOther)
       msj.dismissOthers();
  }
 
  dismiss(){
   alertify.dismissAll();
  }
+}
+
+export class AlertifyOptions {
+  messageType:MessageType = MessageType.Message;
+  position: Position=Position.BottomLeft;
+  delay:number=3;
+  dismissOther:boolean=false;
 }
 
 export enum MessageType{
