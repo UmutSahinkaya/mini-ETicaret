@@ -1,6 +1,6 @@
 import { MessageType } from './../../../../services/admin/alertify.service';
 import { Create_Product } from './../../../../contracts/create_product';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import {
@@ -25,6 +25,8 @@ export class CreateComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  @Output() createdProduct:EventEmitter<Create_Product>=new EventEmitter();
+
   create(
     name: HTMLInputElement,
     stock: HTMLInputElement,
@@ -36,21 +38,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
     create_product.stock = parseInt(stock.value);
     create_product.price = parseFloat(price.value);
 
-    if(!name.value){
-      this.alertify.message("Lütfen ürün adını giriniz.", {
-        dismissOther: false,
-        messageType: MessageType.Error,
-        position: Position.TopRight,
-      });
-      return;
-    }
-    if(parseInt(stock.value) < 0){
-      this.alertify.message("Stok negatif olamaz.", {
-        dismissOther: false,
-        messageType: MessageType.Error,
-        position: Position.TopRight,
-      });
-    }
+    
 
     this.productService.create(
       create_product,
@@ -61,6 +49,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
           messageType: MessageType.Success,
           position: Position.TopRight,
         });
+        this.createdProduct.emit(create_product);
       },
       errorMessage => {
         this.alertify.message(errorMessage, {
